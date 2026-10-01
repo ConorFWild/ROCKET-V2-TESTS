@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=6.2", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rocket_testing"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.12",
+]
+description = "Tools to generate data suitable for loading into Fragalysis"
+dependencies = [
+    "numpy<2.0",
+    "scipy",
+    "joblib",
+    "scikit-learn",
+    "umap-learn",
+    "matplotlib",
+    "rich",
+    "seaborn",
+    "pytest"
+    'gemmi',
+    'zenodo-get',
+] 
+dynamic = ["version"]
+license.file = "LICENSE"
+readme = "README.md"
+requires-python = ">=3.12"
+
+[project.scripts]
+"pandda2.analyse" = "pandda_gemmi.cli:main"
+
+[tool.pytest.ini_options]
+addopts = "-x"
+testpaths = ['tests']
+
+[tool.uv.pip]
+extra-index-url = ["https://download.pytorch.org/whl/cpu"]
