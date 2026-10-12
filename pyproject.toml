@@ -11,7 +11,7 @@ classifiers = [
 ]
 description = "Tools to generate data suitable for loading into Fragalysis"
 dependencies = [
-    "numpy<2.0",
+    "numpy",
     "scipy",
     "joblib",
     "scikit-learn",
@@ -19,20 +19,20 @@ dependencies = [
     "matplotlib",
     "rich",
     "seaborn",
-    "pytest"
-    'gemmi',
-    'zenodo-get',
+    "pytest",
+    "gemmi",
+    "zenodo-get",
+    'spyrmsd',
+    'biopython',
+    'networkx'
 ] 
 dynamic = ["version"]
 license.file = "LICENSE"
 readme = "README.md"
 requires-python = ">=3.12"
 
-[project.scripts]
-"pandda2.analyse" = "pandda_gemmi.cli:main"
-
 [tool.pytest.ini_options]
-addopts = "-x"
+addopts = "-x -s"
 testpaths = ['tests']
 
 [tool.uv.pip]
