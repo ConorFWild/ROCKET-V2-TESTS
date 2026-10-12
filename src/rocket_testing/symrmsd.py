@@ -8,7 +8,6 @@ import json
 from typing import Optional, Iterable, Mapping
 
 import numpy.typing as npt
-# from spyrmsd import rmsd
 import gemmi
 from Bio.Align import Alignment
 from Bio import Align

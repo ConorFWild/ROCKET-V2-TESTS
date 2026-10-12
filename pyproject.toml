@@ -22,7 +22,6 @@ dependencies = [
     "pytest",
     "gemmi",
     "zenodo-get",
-    'spyrmsd',
     'biopython',
     'networkx'
 ] 
