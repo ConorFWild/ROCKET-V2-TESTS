@@ -63,6 +63,8 @@ def run_molprobity(st_path: Path, mtz_path: Path) -> TMolprobity:
         stderr=subprocess.PIPE
     )
         stdout, stderr = p.communicate()
+        print(str(stdout))
+        print(str(stderr))
     else:
         raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
 
