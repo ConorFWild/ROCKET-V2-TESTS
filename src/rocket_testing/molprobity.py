@@ -26,10 +26,10 @@ class MolprobityStats(TMolprobity):
 
     def __repr__(self):
         dic = {
-            self.__getattribute__(k)
+            k: self.__getattribute__(k)
             for k in self.keys
         }
-        return str(dic)
+        return f'Molprobity stats: ({str(dic)})'
 
 
 def parse_molprobity_file(path) -> TMolprobity:    
