@@ -22,6 +22,14 @@ class MolprobityStats(TMolprobity):
     def __init__(self, stats):
         for k, v in stats.items():
             self.__setattr__(k, v)
+        self.keys = {k for k in stats}
+
+    def __repr__(self):
+        dic = {
+            self.__getattribute__(k)
+            for k in self.keys
+        }
+        return str(dic)
 
 
 def parse_molprobity_file(path) -> TMolprobity:    
@@ -65,8 +73,6 @@ def run_molprobity(st_path: Path, mtz_path: Path, out_dir: Path = Path('.')) -> 
         stderr=subprocess.PIPE
     )
         stdout, stderr = p.communicate()
-        print(str(stdout))
-        print(str(stderr))
     else:
         raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
 
