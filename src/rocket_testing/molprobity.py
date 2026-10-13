@@ -55,6 +55,7 @@ def parse_molprobity_file(path) -> TMolprobity:
     )
 
 def run_molprobity(st_path: Path, mtz_path: Path) -> TMolprobity:
+    print(f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}')
     if shutil.which(constants.MOLPROBITY_COMMAND):
         p=subprocess.Popen(
         f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}',
