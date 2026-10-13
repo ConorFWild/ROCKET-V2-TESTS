@@ -54,7 +54,7 @@ def parse_molprobity_file(path) -> TMolprobity:
     }
     )
 
-def run_molprobity(st_path: Path, mtz_path: Path, out_dir: Path = '.') -> TMolprobity:
+def run_molprobity(st_path: Path, mtz_path: Path, out_dir: Path = Path('.')) -> TMolprobity:
     print(f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}')
     out_path = './mp.out'
     if shutil.which(constants.MOLPROBITY_COMMAND):
