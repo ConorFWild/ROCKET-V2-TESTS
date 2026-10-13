@@ -3,7 +3,7 @@ import pytest
 import gemmi
 
 from rocket_testing import constants 
-from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections, Structure
+from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections, Structure, Reflections
 from rocket_testing.selections import get_atom_ids
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def offset_structure(structure) -> TStructure:
 
 @pytest.fixture
 def reflections() -> TReflections:
-    return ...
+    return Reflections(constants.TEST_REFLECTIONS_PATH)
 
 
 @pytest.fixture
