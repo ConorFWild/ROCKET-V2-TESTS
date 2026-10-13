@@ -54,11 +54,12 @@ def parse_molprobity_file(path) -> TMolprobity:
     }
     )
 
-def run_molprobity(st_path: Path, mtz_path: Path) -> TMolprobity:
+def run_molprobity(st_path: Path, mtz_path: Path, out_dir: Path = '.') -> TMolprobity:
     print(f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}')
+    out_path = './mp.out'
     if shutil.which(constants.MOLPROBITY_COMMAND):
         p=subprocess.Popen(
-        f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}',
+        f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={out_dir/'mp'}',
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
@@ -68,6 +69,10 @@ def run_molprobity(st_path: Path, mtz_path: Path) -> TMolprobity:
         print(str(stderr))
     else:
         raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
+
+    mp = parse_molprobity_file(out_path)
+
+    return mp
 
 def molprobity(
         structure: Union[TStructure, Path], 
