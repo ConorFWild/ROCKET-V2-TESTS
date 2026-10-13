@@ -89,5 +89,8 @@ def molprobity(
         case _:
             raise Exception(f"Structure must be a path or have the path attribute!")
 
+    print(f'Molprobity')
+    print(mp)
+
     return mp
     ...
