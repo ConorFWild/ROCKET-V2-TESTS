@@ -4,7 +4,6 @@ Unit test that symrmsds are working correctly
 import pytest
 
 import numpy as np
-import gemmi
 
 from rocket_testing.types import TStructure, TAtomID
 from rocket_testing.symrmsd import symmetric_rmsd

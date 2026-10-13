@@ -9,7 +9,6 @@ from typing import Optional, Iterable, Mapping
 
 import numpy.typing as npt
 import gemmi
-from Bio.Align import Alignment
 from Bio import Align
 import networkx
 import numpy as np
@@ -38,7 +37,7 @@ def get_sequence(ref_structure, ref_chain):
     seq = []
     index_to_res = {}
     j = 0
-    for residue in ref_structure.st[0][ref_chain]:
+    for residue in ref_structure[0][ref_chain]:
         if residue.name not in constants.RESIDUES:
             continue
         seq.append(residue.name)
@@ -48,7 +47,7 @@ def get_sequence(ref_structure, ref_chain):
     seq_one_letter = [gemmi.find_tabulated_residue(_res).one_letter_code for _res in seq]
     return ''.join(seq_one_letter), index_to_res
 
-def iterate_alignments(alignments, ref_structure, mov_structure, index_to_ref_res, index_to_mov_res):
+def iterate_alignments(alignments, index_to_ref_res, index_to_mov_res):
     ref_indicies = alignments[0].indices[0]
     mov_indicies = alignments[0].indices[1]
 
@@ -87,7 +86,7 @@ def get_coords_from_atoms(atoms):
         ])
 
 def get_res_by_id(st, resid):
-    return st.st[0][resid[0]][resid[1]]
+    return st[0][resid[0]][resid[1]]
 
 def get_atom_distances(isomorphism, ref_atoms, mov_atoms):
 
@@ -142,15 +141,15 @@ def symmetric_rmsd(
     # Check chains match if no chain map provided
     if chain_map is None:
         chain_map = {}
-        for ref_chain in ref_structure.st[0]:
+        for ref_chain in ref_structure[0]:
             try:
-                mov_chain = mov_structure.st[0][ref_chain.name]
+                mov_chain = mov_structure[0][ref_chain.name]
                 chain_map[ref_chain.name] = ref_chain.name
             except:
                 raise Exception(
                     f'Chain {ref_chain.name} in ref structure from {ref_structure.path} not present in mov structure {mov_structure.path}\n'
-                    # f'Move chains are {[x.name for x in mov_structure.st[0]]}\n'
-                    f'Ref chains are {[_chain.name for _chain in ref_structure.st[0]]} while mov chains are {[_mov_chain.name for _mov_chain in mov_structure.st[0]]}'
+                    # f'Move chains are {[x.name for x in mov_structure[0]]}\n'
+                    f'Ref chains are {[_chain.name for _chain in ref_structure[0]]} while mov chains are {[_mov_chain.name for _mov_chain in mov_structure[0]]}'
                     )
 
     # Get the distances between all atoms in the selection
@@ -159,11 +158,11 @@ def symmetric_rmsd(
         # Align structures by residue
         if align:
             aligned_mov_structure = mov_structure.clone()
-            ref_pol = ref_structure.st[0][ref_chain_name].get_polymer()
-            mov_pol = mov_structure.st[0][mov_chain_name].get_polymer()
+            ref_pol = ref_structure[0][ref_chain_name].get_polymer()
+            mov_pol = mov_structure[0][mov_chain_name].get_polymer()
             ptype = ref_pol.check_polymer_type()
             sup = gemmi.calculate_superposition(ref_pol, mov_pol, ptype, gemmi.SupSelect.CaP)
-            aligned_mov_structure.st[0][mov_chain_name].get_polymer().transform_pos_and_adp(sup.transform)
+            aligned_mov_structure[0][mov_chain_name].get_polymer().transform_pos_and_adp(sup.transform)
         else:
             aligned_mov_structure = mov_structure
 
@@ -181,7 +180,7 @@ def symmetric_rmsd(
         # Factorize by residue - the symmetric motifs of residues are independent!
         # This means the sum of the minima of each residue is the -global- minima!
         # Very handy! The isomorphism graph of the whole protein is huuuuuuuge!
-        for ref_residue, mov_residue in iterate_alignments(alignments, ref_structure, aligned_mov_structure, index_to_ref_res, index_to_mov_res):
+        for ref_residue, mov_residue in iterate_alignments(alignments, index_to_ref_res, index_to_mov_res):
    
             # Get selection atoms
             ref_atoms = get_res_atoms_in_selection(ref_residue, ref_chain_name, atom_selection)
@@ -191,7 +190,7 @@ def symmetric_rmsd(
                 _ref_atom_name: mov_residue[_ref_atom_name][0] 
                 for _ref_atom_name in ref_atoms}
 
-            # Get all the possible graph isomorphisms
+            # Get distances under all the possible graph isomorphisms
             delta_sets = []
             for isomorphism in isomorphisms[ref_residue.name]:
                 atom_distances = get_atom_distances(isomorphism, ref_atoms, mov_atoms)
@@ -201,4 +200,3 @@ def symmetric_rmsd(
     # Get the final RMSD
     rmsd = np.sqrt(np.mean(np.square(np.concat([_delta for _delta in min_distances.values()], axis=None))))
     return rmsd, min_distances
-    ...

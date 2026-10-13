@@ -13,7 +13,7 @@ def structure() -> TStructure:
 @pytest.fixture
 def offset_structure(structure) -> TStructure:
     offset_structure = structure.clone()
-    for chain in offset_structure.st[0]:
+    for chain in offset_structure[0]:
             for res in chain:
                 for atom in res:
                     atom.pos = atom.pos + gemmi.Position(0.1,0.1,0.1)
@@ -75,10 +75,10 @@ def perturbed_structure() -> TStructure:
 @pytest.fixture
 def structure_swapped(structure):
     _structure_swapped = structure.clone()
-    pos_1 = structure.st[0]['A']['62'][0]["OE1"][0].pos
-    pos_2 = structure.st[0]['A']['62'][0]["OE2"][0].pos
-    _structure_swapped.st[0]['A']['62'][0]["OE1"][0].pos = pos_2
-    _structure_swapped.st[0]['A']['62'][0]["OE2"][0].pos = pos_1
+    pos_1 = structure[0]['A']['62'][0]["OE1"][0].pos
+    pos_2 = structure[0]['A']['62'][0]["OE2"][0].pos
+    _structure_swapped[0]['A']['62'][0]["OE1"][0].pos = pos_2
+    _structure_swapped[0]['A']['62'][0]["OE2"][0].pos = pos_1
     return _structure_swapped
 
 
@@ -86,21 +86,21 @@ def structure_swapped(structure):
 def cut_structure(structure) -> TStructure:
     cut_structure = structure.clone()
     chains_to_delete = []
-    for model in cut_structure.st:
+    for model in cut_structure:
         for chain in model:
             chains_to_delete.append(chain.name)
 
     for chain_name in chains_to_delete:
-        del cut_structure.st[0][chain_name]
+        del cut_structure[0][chain_name]
 
-    for model in structure.st:
+    for model in structure:
         for chain in model:
             new_chain = gemmi.Chain(chain.name)
             for res in chain:
                 if (chain.name == 'A') and (res.seqid.num == 60):
                     continue
                 new_chain.add_residue(res)
-            cut_structure.st[0].add_chain(new_chain) 
+            cut_structure[0].add_chain(new_chain) 
     return cut_structure
 
 @pytest.fixture

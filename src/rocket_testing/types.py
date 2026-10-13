@@ -10,7 +10,6 @@ import gemmi
 
 @runtime_checkable
 class TStructure(Protocol):
-    # underlying datastructure: wrap gemmi or atomid/element[char]/B[float]/occ[float]/coord[float,float,float] arrays!
     st: gemmi.Structure
     def clone(self) -> Self:
         ...
@@ -44,6 +43,9 @@ class TMolprobity(Protocol):
     ...
 
 class Structure(TStructure):
+    """
+    Wrap a structure object so that we can keep a path to the data!
+    """
     def __init__(self, path: Path, st: Optional[gemmi.Structure]=None):
         self.path = path
         match st:
@@ -59,6 +61,12 @@ class Structure(TStructure):
 
     def clone(self) -> Self:
         return Structure(self.path, self.st.clone())
+
+    def __getattr__(self, name):
+        return self.st.__getattribute__(name)
+
+    def __getitem__(self, key):
+        return self.st[key]
 
 class AtomID(TAtomID):
     def __init__(self, chain, insertion, name, altloc):
