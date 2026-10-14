@@ -74,7 +74,7 @@ def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
     with tempfile.TemporaryDirectory() as fp:
         if shutil.which(constants.MOLPROBITY_COMMAND):
             p=subprocess.Popen(
-            f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp.name}',
+            f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp}',
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
@@ -83,7 +83,7 @@ def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
         else:
             raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
 
-        mp = parse_molprobity_file(Path(fp.name) / 'molprobity.out')
+        mp = parse_molprobity_file(Path(fp) / 'molprobity.out')
 
     return mp
 
