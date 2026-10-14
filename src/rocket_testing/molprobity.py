@@ -81,7 +81,12 @@ def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
         )
             stdout, stderr = p.communicate()
         else:
-            raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
+
+            raise Exception(
+                f'{constants.MOLPROBITY_COMMAND} not in path!\n'
+                f'Molprobity stdout: {stdout}\n'
+                f'Molprobity stderr: {stderr}'
+                            )
 
         mp = parse_molprobity_file(Path(fp) / 'molprobity.out')
 
