@@ -2,6 +2,7 @@ from pathlib import Path
 
 TEST_STRUCTURE_PATH = Path('./test_data/XX01ZVNS2B-x3819/dimple.pdb')
 TEST_REFLECTIONS_PATH = Path('./test_data/XX01ZVNS2B-x3819/dimple.mtz')
+TEST_GRID_PATH = Path('./test_data/XX01ZVNS2B-x3819/dimple_2mFo-DFc_map.ccp4')
 MONOMER_JSON = Path('./test_data/monomers.json')
 RESIDUES = ["ALA",
                  "ARG",

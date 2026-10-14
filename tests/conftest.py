@@ -3,7 +3,7 @@ import pytest
 import gemmi
 
 from rocket_testing import constants 
-from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections, Structure, Reflections, TMolprobity
+from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections, Structure, Reflections, TMolprobity, Grid
 from rocket_testing.selections import get_atom_ids
 from rocket_testing.molprobity import MolprobityStats
 
@@ -24,6 +24,9 @@ def offset_structure(structure) -> TStructure:
 def reflections() -> TReflections:
     return Reflections(constants.TEST_REFLECTIONS_PATH)
 
+@pytest.fixture
+def grid() -> TGrid:
+    return Grid(constants.TEST_GRID_PATH)
 
 @pytest.fixture
 def all_atom_selection(structure) -> list[TAtomID]:

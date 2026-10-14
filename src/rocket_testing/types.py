@@ -116,6 +116,27 @@ class Reflections(TReflections):
     def __getitem__(self, key):
         return self.ref[key]
 
+
+class Grid(TGrid):
+    """
+    Wrap a structure object so that we can keep a path to the data!
+    """
+    def __init__(self, path: Path, grid: Optional[gemmi.FloatGrid]=None):
+        self.path = path
+        match grid:
+            case None:
+                self.grid = gemmi.read_ccp4_map(str(path), setup=True).grid 
+            case gemmi.Mtz():
+                self.grid = grid
+            case _:
+                raise Exception(f'{grid} is not a gemmi grid or a path to one!')
+
+    def __getattr__(self, name):
+        return self.st.__getattribute__(name)
+
+    def __getitem__(self, key):
+        return self.ref[key]
+
 class AtomID(TAtomID):
     def __init__(self, chain, insertion, name, altloc):
         self.chain = chain
