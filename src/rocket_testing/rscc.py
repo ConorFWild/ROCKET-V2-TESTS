@@ -68,8 +68,8 @@ def get_rscc(
 
     with tempfile.TemporaryDirectory(delete=False) as fp:
 
-
-        match (st, mtz, xmap, st_2, mtz, xmap_2):
+        print([st, mtz, xmap, st_2, mtz_2, xmap_2])
+        match (st, mtz, xmap, st_2, mtz_2, xmap_2):
             case (Path(), Path(), None, None, None, None):
                 script = PHENIX_MAP_CORRELATIONS.format(
                     dtype1=PHENX_MODEL,
