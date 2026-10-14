@@ -5,6 +5,7 @@ from pathlib import Path
 import tempfile
 import subprocess
 import shutil
+import re
 
 import numpy.typing as npt
 
@@ -16,6 +17,7 @@ PHENX_MAP_COEFFS_1 = "map_coeffs_1"
 PHENX_MAP_COEFFS_2 = "map_coeffs_1"
 PHENX_XMAP_1 = "map_in_1"
 PHENX_XMAP_1 = "map_in_2"
+PHENIX_MAP_CORR_RES_FILE = '_cc_per_residue.log'
 
 PHENIX_MAP_CORRELATIONS = "phenix.map_correlations {dtype1}={path1} {dtype2}={path2} file_name_prefix={out_dir}/" 
 
@@ -54,7 +56,24 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
         case _:
             raise Exception(f'Should have structure, path or None, got: {st}')
 
-def run_phenix_rscc_script(script):
+def parse_rscc_file(path):
+    pattern = r"([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+"
+    with open(path / PHENIX_MAP_CORR_RES_FILE, 'r') as f:  
+        matches = re.findall(f.read())
+
+    data = []
+    for match in matches:
+        data.append( {
+            'chain':match[1],
+            'res_name':match[1],
+            'insertion':match[1],
+            'rscc':match[1],
+            'b':match[1],
+            'occ':match[1],
+        })
+    return data
+
+def run_phenix_rscc_script(script, out_dir):
     if shutil.which(constants.PHENIX_MAP_CORR):
         p=subprocess.Popen(
             script,
@@ -69,7 +88,8 @@ def run_phenix_rscc_script(script):
             f'{constants.PHENIX_MAP_CORR} not in path!\n'
                         )
     try:
-        mp = parse_rscc_file(Path(fp) / 'molprobity.out')
+        rscc = parse_rscc_file(Path(out_dir) / '_cc_per_residue.log')
+        print(rscc)
     except:
         raise Exception(
             f'Molprobity command: "{script}\n'
@@ -105,7 +125,7 @@ def get_rscc(
                     out_dir=fp
                 )
                 print(script)
-                run_phenix_rscc_script(script)
+                run_phenix_rscc_script(script, fp)
             case (Path(), None, Path(), None, None, None):
                 ""
                 ...
