@@ -6,7 +6,10 @@ import pytest
 import numpy as np
 
 from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections
-from rocket_testing.rscc import rscc_st_to_st, rscc_st_to_grid
+from rocket_testing.rscc import get_rscc
+
+def test_rscc_model_mtz(structure: TStructure, reflections: TReflections):
+    get_rscc(structure, reflections)
 
 @pytest.mark.skip(reason="Not Implemented")
 def test_rscc_self_all_atom(structure: TStructure, all_atom_selection: list[TAtomID]):
