@@ -56,6 +56,11 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
         case _:
             raise Exception(f'Should have structure, path or None, got: {st}')
 
+def parse_rscc_output(stdout):
+    pattern = r'Map-map CC is ([\S]+)'
+    match = re.match(pattern, stdout)
+    return float(match[0])
+
 def parse_rscc_file(path):
     pattern = r"([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+"
     with open(path , 'r') as f:  
@@ -87,15 +92,24 @@ def run_phenix_rscc_script(script, out_dir):
         raise Exception(
             f'{constants.PHENIX_MAP_CORR} not in path!\n'
                         )
+    
     try:
-        rscc = parse_rscc_file(Path(out_dir) / '_cc_per_residue.log')
+        rscc = parse_rscc_output(stdout)
+    except:
+        rscc = None
+    
+    try:
+        rsccs = parse_rscc_file(Path(out_dir) / '_cc_per_residue.log')
         print(rscc)
     except:
-        raise Exception(
-            f'Molprobity command: "{script}\n'
-            f'Molprobity stdout: {stdout}\n'
-            f'Molprobity stderr: {stderr}'
-                        )
+        rsccs = None
+        # raise Exception(
+        #     f'Molprobity command: "{script}\n'
+        #     f'Molprobity stdout: {stdout}\n'
+        #     f'Molprobity stderr: {stderr}'
+        #                 )
+
+    return rscc, rsccs
 
 def get_rscc(
         st: TStructure | Path| None = None,
