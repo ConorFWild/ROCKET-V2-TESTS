@@ -46,6 +46,7 @@ class TAtomID(Hashable, Protocol):
 
     def __repr__(self) -> str: ...
 
+@runtime_checkable
 class TMolprobity(Protocol):
     ramachandran_outliers: float
     ramachandran_favored: float

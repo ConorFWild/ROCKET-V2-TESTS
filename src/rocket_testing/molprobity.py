@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Union
 import shutil
 import subprocess
+import tempfile
 
 import numpy.typing as npt
 
@@ -31,6 +32,12 @@ class MolprobityStats(TMolprobity):
         }
         return f'Molprobity stats: ({str(dic)})'
 
+    def __eq__(self, value):
+        match value:
+            case TMolprobity():
+                return all([self.__getattribute__(k) == value.__get_attribute__(k) for k in self.keys])
+            case _:
+                return False
 
 def parse_molprobity_file(path) -> TMolprobity:    
     # Get text 
@@ -62,21 +69,21 @@ def parse_molprobity_file(path) -> TMolprobity:
     }
     )
 
-def run_molprobity(st_path: Path, mtz_path: Path, out_dir: Path = Path('.')) -> TMolprobity:
+def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
     print(f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}')
-    out_path = './mp.out'
-    if shutil.which(constants.MOLPROBITY_COMMAND):
-        p=subprocess.Popen(
-        f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={out_dir/'mp'}',
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
-        stdout, stderr = p.communicate()
-    else:
-        raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
+    with tempfile.TemporaryDirectory() as fp:
+        if shutil.which(constants.MOLPROBITY_COMMAND):
+            p=subprocess.Popen(
+            f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp.name}',
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+            stdout, stderr = p.communicate()
+        else:
+            raise Exception(f'{constants.MOLPROBITY_COMMAND} not in path!')
 
-    mp = parse_molprobity_file(out_path)
+        mp = parse_molprobity_file(Path(fp.name) / 'molprobity.out')
 
     return mp
 
