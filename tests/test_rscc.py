@@ -9,10 +9,10 @@ from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections
 from rocket_testing.rscc import get_rscc
 
 def test_rscc_model_mtz(structure: TStructure, reflections: TReflections):
-    get_rscc(structure, reflections)
+    get_rscc(structure, mtz=reflections)
 
 def test_rscc_model_xmap(structure: TStructure, grid: TGrid):
-    get_rscc(structure, grid)
+    get_rscc(structure, xmap=grid)
 
 @pytest.mark.skip(reason="Not Implemented")
 def test_rscc_self_all_atom(structure: TStructure, all_atom_selection: list[TAtomID]):
