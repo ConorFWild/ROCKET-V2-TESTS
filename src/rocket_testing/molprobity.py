@@ -84,6 +84,7 @@ def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
 
             raise Exception(
                 f'{constants.MOLPROBITY_COMMAND} not in path!\n'
+                f'Molprobity command: {f"{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp}/"}'
                 f'Molprobity stdout: {stdout}\n'
                 f'Molprobity stderr: {stderr}'
                             )
