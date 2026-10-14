@@ -35,7 +35,7 @@ class MolprobityStats(TMolprobity):
     def __eq__(self, value):
         match value:
             case TMolprobity():
-                return all([self.__getattribute__(k) == value.__get_attribute__(k) for k in self.keys])
+                return all([self.__getattribute__(k) == value.__getattribute__(k) for k in self.keys])
             case _:
                 return False
 
