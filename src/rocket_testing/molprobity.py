@@ -71,7 +71,7 @@ def parse_molprobity_file(path) -> TMolprobity:
 
 def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
     print(f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path}')
-    with tempfile.TemporaryDirectory() as fp:
+    with tempfile.TemporaryDirectory(delete=False) as fp:
         if shutil.which(constants.MOLPROBITY_COMMAND):
             p=subprocess.Popen(
             f'{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp}/',
@@ -89,7 +89,7 @@ def run_molprobity(st_path: Path, mtz_path: Path, ) -> TMolprobity:
             mp = parse_molprobity_file(Path(fp) / 'molprobity.out')
         except:
             raise Exception(
-                f'Molprobity command: {f"{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp}/"}\n'
+                f'Molprobity command: {f"{constants.MOLPROBITY_COMMAND} {st_path} {mtz_path} output.prefix={fp}/molprobity"}\n'
                 f'Molprobity stdout: {stdout}\n'
                 f'Molprobity stderr: {stderr}'
                             )
