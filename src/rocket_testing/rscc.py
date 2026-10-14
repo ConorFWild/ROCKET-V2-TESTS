@@ -59,7 +59,7 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
 def parse_rscc_file(path):
     pattern = r"([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+"
     with open(path , 'r') as f:  
-        matches = re.findall(f.read())
+        matches = re.findall(pattern, f.read(),)
 
     data = []
     for match in matches:
