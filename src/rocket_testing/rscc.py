@@ -139,7 +139,9 @@ def get_rscc(
                     out_dir=fp
                 )
                 print(script)
-                run_phenix_rscc_script(script, fp)
+                rscc, rsccs = run_phenix_rscc_script(script, fp)
+                print(rscc)
+                print(rsccs)
             case (Path(), None, Path(), None, None, None):
                 script = PHENIX_MAP_CORRELATIONS.format(
                                     dtype1=PHENX_MODEL,
