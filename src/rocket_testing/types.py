@@ -17,6 +17,7 @@ class TStructure(Protocol):
 class TAtom(Protocol):
     ...
 
+@runtime_checkable
 class TGrid(Protocol):
     # Wrap data array + cell params + SG
     path: Path
