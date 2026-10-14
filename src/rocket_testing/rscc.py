@@ -14,9 +14,9 @@ from . import constants
 
 PHENX_MODEL = "model"
 PHENX_MAP_COEFFS_1 = "map_coeffs_1"
-PHENX_MAP_COEFFS_2 = "map_coeffs_1"
+PHENX_MAP_COEFFS_2 = "map_coeffs_2"
 PHENX_XMAP_1 = "map_in_1"
-PHENX_XMAP_1 = "map_in_2"
+PHENX_XMAP_2 = "map_in_2"
 PHENIX_MAP_CORR_RES_FILE = '_cc_per_residue.log'
 
 PHENIX_MAP_CORRELATIONS = "phenix.map_correlations {dtype1}={path1} {dtype2}={path2} file_name_prefix={out_dir}/" 
@@ -143,6 +143,14 @@ def get_rscc(
             case (None, Path(), None, None, None, Path(),):
                 ...
             case (None, None, Path(), None, None, Path(),):
-                ...
+                script = PHENIX_MAP_CORRELATIONS.format(
+                    dtype1=PHENX_XMAP_1,
+                    path1=xmap,
+                    dtype2=PHENX_XMAP_2,
+                    path2=xmap_2,
+                    out_dir=fp
+                )
+                print(script)
+                run_phenix_rscc_script(script, fp)
             case (_, _, _, _, _, _):
                 raise Exception(f'Wrong input types!')
