@@ -29,6 +29,10 @@ def grid() -> TGrid:
     return Grid(constants.TEST_GRID_PATH)
 
 @pytest.fixture
+def grid_2() -> TGrid:
+    return Grid(constants.TEST_GRID_PATH)
+
+@pytest.fixture
 def all_atom_selection(structure) -> list[TAtomID]:
     return list(get_atom_ids(structure))
 
