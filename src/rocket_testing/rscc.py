@@ -40,6 +40,10 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
     match st:
         case TStructure():
             return st.path
+        case TReflections():
+            return st.path
+        case TGrid():
+            return st.path
         case Path():
             return st
         case None:
