@@ -64,12 +64,12 @@ def parse_rscc_file(path):
     data = []
     for match in matches:
         data.append( {
-            'chain':match[1],
+            'chain':match[0],
             'res_name':match[1],
-            'insertion':match[1],
-            'rscc':match[1],
-            'b':match[1],
-            'occ':match[1],
+            'insertion':match[2],
+            'rscc':match[3],
+            'b':match[4],
+            'occ':match[5],
         })
     return data
 
