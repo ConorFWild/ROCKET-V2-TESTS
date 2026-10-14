@@ -66,10 +66,10 @@ def parse_rscc_file(path):
         data.append( {
             'chain':match[0],
             'res_name':match[1],
-            'insertion':match[2],
-            'rscc':match[3],
-            'b':match[4],
-            'occ':match[5],
+            'insertion': match[2],
+            'rscc': float(match[3]),
+            'b': float(match[4]),
+            'occ': float(match[5]),
         })
     return data
 
