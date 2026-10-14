@@ -60,7 +60,7 @@ def parse_rscc_output(stdout):
     pattern = r'Map-map CC is ([\S]+)'
     match = re.match(pattern, stdout)
     print(match)
-    return float(match[0])
+    return float(match.groups(0))
 
 def parse_rscc_file(path):
     pattern = r"([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+"
@@ -95,7 +95,7 @@ def run_phenix_rscc_script(script, out_dir):
                         )
     
     try:
-        rscc = parse_rscc_output(stdout)
+        rscc = parse_rscc_output(str(stdout))
     except:
         rscc = None
     
