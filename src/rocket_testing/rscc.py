@@ -96,7 +96,8 @@ def run_phenix_rscc_script(script, out_dir):
     
     try:
         rscc = parse_rscc_output(str(stdout))
-    except:
+    except Exception as e:
+        print(e)
         rscc = None
     
     try:
