@@ -3,10 +3,13 @@ Functions for calculating the RSCC between structures
 """
 from pathlib import Path
 import tempfile
+import subprocess
+import shutil
 
 import numpy.typing as npt
 
 from .types import TStructure, TAtomID, TGrid, TReflections
+from . import constants
 
 PHENX_MODEL = "model"
 PHENX_MAP_COEFFS_1 = "map_coeffs_1"
@@ -51,6 +54,29 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
         case _:
             raise Exception(f'Should have structure, path or None, got: {st}')
 
+def run_phenix_rscc_script(script):
+    if shutil.which(constants.PHENIX_MAP_CORR):
+        p=subprocess.Popen(
+            script,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = p.communicate()
+    else:
+
+        raise Exception(
+            f'{constants.PHENIX_MAP_CORR} not in path!\n'
+                        )
+    try:
+        mp = parse_rscc_file(Path(fp) / 'molprobity.out')
+    except:
+        raise Exception(
+            f'Molprobity command: "{script}\n'
+            f'Molprobity stdout: {stdout}\n'
+            f'Molprobity stderr: {stderr}'
+                        )
+
 def get_rscc(
         st: TStructure | Path| None = None,
         mtz: TReflections| Path| None= None,
@@ -79,7 +105,7 @@ def get_rscc(
                     out_dir=fp
                 )
                 print(script)
-
+                run_phenix_rscc_script(script)
             case (Path(), None, Path(), None, None, None):
                 ""
                 ...

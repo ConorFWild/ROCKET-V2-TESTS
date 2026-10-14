@@ -49,3 +49,5 @@ class MolprobityConstants:
     NUM_REFLECTIONS_NON_OUTLYING = r'\s+after outlier rejection\s+=\s+([0-9.]+)\s+\(([0-9.]+)\)'
     COMPLETENESS = r'\s+Completeness\s+=\s+([0-9.]+)%\s+\(([0-9.]+)%\)'
     MOLPROBITY_CSV_PATH = '/dls/data2temp01/cfw/pandda_paper/data/molprobity.csv'
+
+PHENIX_MAP_CORR = "phenix.map_correlations"
