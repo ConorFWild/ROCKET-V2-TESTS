@@ -59,6 +59,7 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
 def parse_rscc_output(stdout):
     pattern = r'Map-map CC is ([\S]+)'
     match = re.match(pattern, stdout)
+    print(match)
     return float(match[0])
 
 def parse_rscc_file(path):
