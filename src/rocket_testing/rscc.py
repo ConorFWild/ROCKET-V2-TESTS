@@ -91,4 +91,5 @@ def get_rscc(
                 ...
             case (None, None, Path(), None, None, Path(),):
                 ...
-                    
+            case (_, _, _, _, _, _):
+                raise Exception(f'Wrong input types!')
