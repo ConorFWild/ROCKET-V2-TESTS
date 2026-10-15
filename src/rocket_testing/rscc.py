@@ -8,6 +8,7 @@ import shutil
 import re
 
 import numpy.typing as npt
+import gemmi
 
 from .types import TStructure, TAtomID, TGrid, TReflections
 from . import constants
@@ -115,8 +116,29 @@ def run_phenix_rscc_script(script, out_dir):
 
     return rscc, rsccs
 
+
+def _make_structure_mtz_file(st_path, tmp_dir):
+    st = gemmi.read_structure(str(st_path))
+    out_path = tmp_dir / 'sf.mtz'
+    script = f"phenix.fmodel {st_path} high_resolution={st.resolution} file_name={out_path}"
+    if shutil.which('phenix.fmodel'):
+        p=subprocess.Popen(
+            script,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = p.communicate()
+    else:
+        raise Exception()
+
+    if out_path.exists():
+        return out_path
+    else:
+        raise Exception()
+
 def get_rscc(
-        d1: TStructure | TReflections | TGrid | Path ,
+        d1: TStructure | TReflections | TGrid | Path,
         d2: TStructure | TReflections | TGrid | Path 
 ):
 
@@ -145,7 +167,15 @@ def get_rscc(
     with tempfile.TemporaryDirectory(delete=False) as fp:
         match dtypes:
             case [x, y] if (x == y == PHENX_MODEL):
-                ...
+                mtz_file = _make_structure_mtz_file(y)
+                script = PHENIX_MAP_CORRELATIONS.format(
+                                                    dtype1=PHENX_MODEL,
+                                                    path1=_get_path(d1),
+                                                    dtype2=PHENX_MAP_COEFFS_1,
+                                                    path2=mtz_file,
+                                                    out_dir=fp
+                                                )
+                rscc, rsccs = run_phenix_rscc_script(script, fp)
             case _:
                 script = PHENIX_MAP_CORRELATIONS.format(
                                     dtype1=dtypes[0],

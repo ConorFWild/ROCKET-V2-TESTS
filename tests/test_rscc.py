@@ -8,15 +8,22 @@ import numpy as np
 from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections
 from rocket_testing.rscc import get_rscc
 
+def test_rscc_st_st(structure: TStructure, ):
+    structure_2 = structure.clone()
+    rscc, _ = get_rscc(structure, structure_2)
+    assert np.allclose(rscc, 1.0)
+
 def test_rscc_model_mtz(structure: TStructure, reflections: TReflections):
-    get_rscc(structure, reflections)
+    rscc, rsccs = get_rscc(structure, reflections)
 
 def test_rscc_model_xmap(structure: TStructure, grid: TGrid):
-    get_rscc(structure, grid)
+    rscc, rsccs = get_rscc(structure, grid)
 
 def test_rscc_xmap_xmap(grid: TGrid, grid_2: TGrid):
     rscc, _ = get_rscc(grid, grid_2)
     assert np.allclose(rscc, 1.0)
+
+
 
 @pytest.mark.skip(reason="Not Implemented")
 def test_rscc_self_all_atom(structure: TStructure, all_atom_selection: list[TAtomID]):
