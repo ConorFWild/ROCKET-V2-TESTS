@@ -9,10 +9,13 @@ from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections
 from rocket_testing.rscc import get_rscc
 
 def test_rscc_st_st(structure: TStructure, ):
+    """
+    Note! Granular RSCCs should in principle be 1, but in practice this implementation
+    puts them more like 0.9-1.0 - probably a quirk of differences in FCalc or 
+    how masking works!
+    """
     structure_2 = structure.clone()
     rscc, rsccs = get_rscc(structure, structure_2)
-    print(rscc)
-    print(rsccs)
     assert np.allclose(rscc, 1.0)
 
 def test_rscc_model_mtz(structure: TStructure, reflections: TReflections):
