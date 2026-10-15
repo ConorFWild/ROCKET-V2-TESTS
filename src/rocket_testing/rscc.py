@@ -57,7 +57,7 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
             raise Exception(f'Should have structure, path or None, got: {st}')
 
 def parse_rscc_output(stdout):
-    pattern = r'Map-map CC is ([\S]+)'
+    pattern = r'Map-map CC is ([\S]+)[^\.0-9]'
     match = re.search(pattern, stdout)
     print(match)
     return float(match.group(1))
