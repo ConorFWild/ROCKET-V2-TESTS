@@ -168,12 +168,12 @@ def get_rscc(
         match dtypes:
             case [x, y] if (x == y == PHENX_MODEL):
                 mtz_file = _make_structure_mtz_file(_get_path(d1), fp)
-                mtz_file = _make_structure_mtz_file(_get_path(d2), fp)
+                mtz_file_2 = _make_structure_mtz_file(_get_path(d2), fp)
                 script = PHENIX_MAP_CORRELATIONS.format(
                                                     dtype1=PHENX_MAP_COEFFS_1,
-                                                    path1=_get_path(d1),
+                                                    path1=mtz_file,
                                                     dtype2=PHENX_MAP_COEFFS_2,
-                                                    path2=_get_path(d2),
+                                                    path2=mtz_file_2,
                                                     out_dir=fp
                                                 )
                 rscc, rsccs = run_phenix_rscc_script(script, fp)
