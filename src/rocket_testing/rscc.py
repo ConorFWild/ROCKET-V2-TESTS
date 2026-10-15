@@ -151,7 +151,7 @@ def get_rscc(
                                     dtype1=dtypes[0],
                                     path1=_get_path(d1),
                                     dtype2=dtypes[1],
-                                    path2=_get_path(d1),
+                                    path2=_get_path(d2),
                                     out_dir=fp
                                 )
                 rscc, rsccs = run_phenix_rscc_script(script, fp)
