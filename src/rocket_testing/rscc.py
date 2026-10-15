@@ -57,7 +57,7 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
             raise Exception(f'Should have structure, path or None, got: {st}')
 
 def parse_rscc_output(stdout):
-    pattern = r'Map-map CC is ([\S]+)[^\.0-9]'
+    pattern = r'Map-map CC is ([\.0-9]+)'
     match = re.search(pattern, stdout)
     print(match)
     return float(match.group(1))
@@ -110,6 +110,15 @@ def run_phenix_rscc_script(script, out_dir):
         #     f'Molprobity stdout: {stdout}\n'
         #     f'Molprobity stderr: {stderr}'
         #                 )
+
+    match (rscc, rsccs):
+        case (None, None):
+            raise Exception(
+                f'Did not get any RSCCs!\n'
+                f'Phenix command: {script}\n'
+                f'Phenix map.correlation stdout: {stdout}\n'
+                f'Phenix map.correlation stderr: {stderr}\n'
+            )
 
     return rscc, rsccs
 
