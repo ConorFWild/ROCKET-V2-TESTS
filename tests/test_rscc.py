@@ -11,6 +11,7 @@ from rocket_testing.rscc import get_rscc
 def test_rscc_st_st(structure: TStructure, ):
     structure_2 = structure.clone()
     rscc, rsccs = get_rscc(structure, structure_2)
+    print(rscc)
     print(rsccs)
     assert np.allclose(rscc, 1.0)
 
