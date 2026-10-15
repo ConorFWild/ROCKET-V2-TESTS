@@ -15,7 +15,8 @@ def test_rscc_model_xmap(structure: TStructure, grid: TGrid):
     get_rscc(structure, xmap=grid)
 
 def test_rscc_xmap_xmap(grid: TGrid, grid_2: TGrid):
-    get_rscc(xmap=grid, xmap_2=grid_2)
+    rscc, _ = get_rscc(xmap=grid, xmap_2=grid_2)
+    assert np.allclose(rscc, 1.0)
 
 @pytest.mark.skip(reason="Not Implemented")
 def test_rscc_self_all_atom(structure: TStructure, all_atom_selection: list[TAtomID]):
