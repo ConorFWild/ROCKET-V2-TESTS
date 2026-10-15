@@ -167,7 +167,7 @@ def get_rscc(
     with tempfile.TemporaryDirectory(delete=False) as fp:
         match dtypes:
             case [x, y] if (x == y == PHENX_MODEL):
-                mtz_file = _make_structure_mtz_file(y)
+                mtz_file = _make_structure_mtz_file(y, fp)
                 script = PHENIX_MAP_CORRELATIONS.format(
                                                     dtype1=PHENX_MODEL,
                                                     path1=_get_path(d1),
