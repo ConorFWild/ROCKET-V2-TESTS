@@ -16,6 +16,6 @@ def test_molprobity_known_values(structure: TStructure, reflections: TReflection
     _molprobity: TMolprobity = molprobity(structure, reflections)
 
     for k in _molprobity.keys:
-        
-        assert np.allclose(_molprobity.__getattribute__(k), known_molprobity.__getattribute__(k), rtol=0.35)
+        # This may not be a great test? Some params seem to vary between molprobity versions?
+        assert np.allclose(_molprobity.__getattribute__(k), known_molprobity.__getattribute__(k),)
     ...
