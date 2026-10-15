@@ -13,5 +13,7 @@ def test_molprobity_known_values(structure: TStructure, reflections: TReflection
     # Test against known values
     _molprobity: TMolprobity = molprobity(structure, reflections)
 
-    assert _molprobity == known_molprobity 
+    for k in _molprobity.keys:
+        
+        assert _molprobity.__getattribute__(k) == known_molprobity.__getattribute__(k) 
     ...
