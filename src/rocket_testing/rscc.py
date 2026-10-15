@@ -176,7 +176,16 @@ def get_rscc(
                                                     path2=mtz_file_2,
                                                     out_dir=fp
                                                 )
-                rscc, rsccs = run_phenix_rscc_script(script, fp)
+                rscc, _ = run_phenix_rscc_script(script, fp)
+
+                script = PHENIX_MAP_CORRELATIONS.format(
+                                    dtype1=PHENX_MODEL,
+                                    path1=_get_path(d1),
+                                    dtype2=PHENX_MAP_COEFFS_1,
+                                    path2=mtz_file_2,
+                                    out_dir=fp
+                                )
+                _, rsccs = run_phenix_rscc_script(script, fp)
             case _:
                 script = PHENIX_MAP_CORRELATIONS.format(
                                     dtype1=dtypes[0],
