@@ -10,7 +10,8 @@ from rocket_testing.rscc import get_rscc
 
 def test_rscc_st_st(structure: TStructure, ):
     structure_2 = structure.clone()
-    rscc, _ = get_rscc(structure, structure_2)
+    rscc, rsccs = get_rscc(structure, structure_2)
+    print(rsccs)
     assert np.allclose(rscc, 1.0)
 
 def test_rscc_model_mtz(structure: TStructure, reflections: TReflections):
