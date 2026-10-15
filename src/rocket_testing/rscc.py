@@ -60,7 +60,7 @@ def parse_rscc_output(stdout):
     pattern = r'Map-map CC is ([\S]+)'
     match = re.search(pattern, stdout)
     print(match)
-    return float(match.groups(1))
+    return float(match.group(1))
 
 def parse_rscc_file(path):
     pattern = r"([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+([\S]+)[\s]+"
