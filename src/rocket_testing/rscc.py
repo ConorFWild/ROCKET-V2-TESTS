@@ -59,7 +59,6 @@ def _get_path(st: TStructure | Path| None) -> Path | None:
 def parse_rscc_output(stdout):
     pattern = r'Map-map CC is ([\.0-9]+)'
     match = re.search(pattern, stdout)
-    print(match)
     return float(match.group(1))
 
 def parse_rscc_file(path):
@@ -97,19 +96,13 @@ def run_phenix_rscc_script(script, out_dir):
     try:
         rscc = parse_rscc_output(str(stdout))
     except Exception as e:
-        print(e)
         rscc = None
     
     try:
         rsccs = parse_rscc_file(Path(out_dir) / '_cc_per_residue.log')
-        print(rscc)
     except:
         rsccs = None
-        # raise Exception(
-        #     f'Molprobity command: "{script}\n'
-        #     f'Molprobity stdout: {stdout}\n'
-        #     f'Molprobity stderr: {stderr}'
-        #                 )
+
 
     match (rscc, rsccs):
         case (None, None):
@@ -139,7 +132,6 @@ def get_rscc(
 
     with tempfile.TemporaryDirectory(delete=False) as fp:
 
-        print([st, mtz, xmap, st_2, mtz_2, xmap_2])
         match (st, mtz, xmap, st_2, mtz_2, xmap_2):
             case (Path(), Path(), None, None, None, None):
                 script = PHENIX_MAP_CORRELATIONS.format(
@@ -149,10 +141,7 @@ def get_rscc(
                     path2=mtz,
                     out_dir=fp
                 )
-                print(script)
                 rscc, rsccs = run_phenix_rscc_script(script, fp)
-                print(rscc)
-                print(rsccs)
             case (Path(), None, Path(), None, None, None):
                 script = PHENIX_MAP_CORRELATIONS.format(
                                     dtype1=PHENX_MODEL,
@@ -161,7 +150,6 @@ def get_rscc(
                                     path2=xmap,
                                     out_dir=fp
                                 )
-                print(script)
                 run_phenix_rscc_script(script, fp)
             case (Path(), None, None, Path(), None, None,):
                 ...
@@ -177,7 +165,8 @@ def get_rscc(
                     path2=xmap_2,
                     out_dir=fp
                 )
-                print(script)
                 run_phenix_rscc_script(script, fp)
             case (_, _, _, _, _, _):
                 raise Exception(f'Wrong input types!')
+
+    return rscc, rsccs
