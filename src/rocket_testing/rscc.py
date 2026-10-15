@@ -150,7 +150,7 @@ def get_rscc(
                                     path2=xmap,
                                     out_dir=fp
                                 )
-                run_phenix_rscc_script(script, fp)
+                rscc, rsccs = run_phenix_rscc_script(script, fp)
             case (Path(), None, None, Path(), None, None,):
                 ...
             case (None, Path(), None, None, Path(), None,):
@@ -165,7 +165,7 @@ def get_rscc(
                     path2=xmap_2,
                     out_dir=fp
                 )
-                run_phenix_rscc_script(script, fp)
+                rscc, rsccs = run_phenix_rscc_script(script, fp)
             case (_, _, _, _, _, _):
                 raise Exception(f'Wrong input types!')
 
