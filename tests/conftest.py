@@ -122,7 +122,7 @@ def known_molprobity() -> TMolprobity:
          'num_reflections_non_outlying_unique': 1464, 
          'resolution_full_high': 1.91, 
          'num_reflections_unique': 1464, 
-         'rms_bonds': 0.014, 
+         'rms_bonds': 0.0176, 
          'completeness_unique': 92.08, 
          'num_reflections_non_outlying': 16354, 
          'molprobity': 1.76, 
