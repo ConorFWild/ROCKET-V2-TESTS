@@ -5,9 +5,18 @@ import pytest
 
 import numpy as np
 
-from rocket_testing.types import TStructure, TAtomID
+from rocket_testing.types import TStructure, TAtomID, TRestraints
 from rocket_testing.symrmsd import symmetric_rmsd
 
+def test_symrmsd_self_all_atom_with_ligand(
+        structure_with_ligand: TStructure, 
+        restraints: TRestraints, 
+        all_atom_selection_with_ligand: list[TAtomID],
+        ):
+    # Test the usual all atom RMSD ignoring atom altlocs
+    structure_copy: TStructure = structure_with_ligand.clone()
+    rmsd, distances = symmetric_rmsd(structure_with_ligand, structure_copy, all_atom_selection_with_ligand, {restraints.name: restraints})
+    assert np.allclose(rmsd, 0.0)
 
 def test_symrmsd_self_all_atom(structure: TStructure, all_atom_selection: list[TAtomID]):
     # Test the usual all atom RMSD ignoring atom altlocs

@@ -3,13 +3,19 @@ import pytest
 import gemmi
 
 from rocket_testing import constants 
-from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections, Structure, Reflections, TMolprobity, Grid
+from rocket_testing.types import TStructure, TAtomID, TGrid, TReflections, Structure, Reflections, TMolprobity, Grid, TRestraints, Restraints
 from rocket_testing.selections import get_atom_ids
 from rocket_testing.molprobity import MolprobityStats
 
 @pytest.fixture
 def structure() -> TStructure:
     return Structure(constants.TEST_STRUCTURE_PATH)
+
+@pytest.fixture
+def structure_with_ligand() -> TStructure:
+    return Structure(constants.TEST_STRUCTURE_WITH_LIGAND_PATH)
+
+
 
 @pytest.fixture
 def offset_structure(structure) -> TStructure:
@@ -33,8 +39,16 @@ def grid_2() -> TGrid:
     return Grid(constants.TEST_GRID_PATH_2)
 
 @pytest.fixture
+def restraints() -> TRestraints:
+    return Restraints(constants.TEST_CIF_PATH)
+
+@pytest.fixture
 def all_atom_selection(structure) -> list[TAtomID]:
     return list(get_atom_ids(structure))
+
+@pytest.fixture
+def all_atom_selection_with_ligand(structure_with_ligand) -> list[TAtomID]:
+    return list(get_atom_ids(structure_with_ligand))
 
 
 @pytest.fixture

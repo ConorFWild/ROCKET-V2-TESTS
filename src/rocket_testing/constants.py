@@ -1,10 +1,11 @@
 from pathlib import Path
 
 TEST_STRUCTURE_PATH = Path('./test_data/XX01ZVNS2B-x3819/dimple.pdb')
+TEST_STRUCTURE_WITH_LIGAND_PATH = Path('./test_data/XX01ZVNS2B-x3819/refine.pdb')
 TEST_REFLECTIONS_PATH = Path('./test_data/XX01ZVNS2B-x3819/dimple.mtz')
 TEST_GRID_PATH = Path('./test_data/XX01ZVNS2B-x3819/dimple_2mFo-DFc_map.ccp4')
 TEST_GRID_PATH_2 = Path('./test_data/XX01ZVNS2B-x3819/dimple_2mFo-DFc_map_2.ccp4')
-
+TEST_CIF_PATH = Path('./test_data/XX01ZVNS2B-x3819/ASAP-0031519-001.cif')
 MONOMER_JSON = Path('./test_data/monomers.json')
 RESIDUES = ["ALA",
                  "ARG",

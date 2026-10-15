@@ -6,6 +6,7 @@ calculating graph symmetric RMSDs
 from functools import cache
 import json
 from typing import Optional, Iterable, Mapping
+import itertools
 
 import numpy.typing as npt
 import gemmi
@@ -16,7 +17,7 @@ import networkx.algorithms.isomorphism as iso
 
 
 from .selections import get_atoms, get_atom_ids
-from .types import TStructure, TResID, TAtomID, AtomID
+from .types import TStructure, TResID, TAtomID, AtomID, TRestraints
 from . import constants
 
 @cache
@@ -101,6 +102,7 @@ def symmetric_rmsd(
         ref_structure: TStructure, 
         mov_structure: TStructure, 
         atom_selection: Optional[list[TAtomID]]=None,
+        restraints: dict[str, TRestraints]=None,
         chain_map = None,
         align=True
         ) -> tuple[float, npt.ArrayLike]:
@@ -196,6 +198,29 @@ def symmetric_rmsd(
                 atom_distances = get_atom_distances(isomorphism, ref_atoms, mov_atoms)
                 delta_sets.append(atom_distances)
             min_distances[(ref_chain_name, str(ref_residue.seqid.num), ref_residue.name)] = min(delta_sets, key=lambda _delta_set: np.sum(_delta_set))
+
+        # Handle the ligands - assume identical naming!
+        if restraints:
+            ref_chain_ligs = [_res for _res in ref_structure[0][ref_chain_name] if (_res.name in restraints)]
+            mov_chain_ligs = [_res for _res in aligned_mov_structure[0][mov_chain_name] if (_res.name in restraints)]
+
+            for lig_name, restraint in restraints.items():
+                for ref_lig, mov_lig in itertools.product(ref_chain_ligs, mov_chain_ligs):
+                    if not (lig_name == ref_lig.name == mov_lig.name) & (ref_lig.seqid.num == mov_lig.seqid.num):
+                        continue
+                    ref_atoms = get_res_atoms_in_selection(ref_lig, ref_chain_name, atom_selection)
+                    if len(ref_atoms) == 0:
+                        continue
+                    mov_atoms = {
+                        _ref_atom_name: mov_lig[_ref_atom_name][0] 
+                        for _ref_atom_name in ref_atoms}
+                    delta_sets = []
+                    for isomorphism in restraint.isomorphisms:
+                        atom_distances = get_atom_distances(isomorphism, ref_atoms, mov_atoms)
+                        delta_sets.append(atom_distances)
+                    min_distances[(ref_chain_name, str(ref_lig.seqid.num), ref_lig.name)] = min(delta_sets, key=lambda _delta_set: np.sum(_delta_set        ))
+
+                    ...
 
     # Get the final RMSD
     rmsd = np.sqrt(np.mean(np.square(np.concat([_delta for _delta in min_distances.values()], axis=None))))

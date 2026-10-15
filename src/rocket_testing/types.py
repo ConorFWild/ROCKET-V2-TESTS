@@ -7,12 +7,22 @@ from collections.abc import Hashable
 from pathlib import Path
 
 import gemmi
+import networkx
+import networkx.algorithms.isomorphism as iso
+
 
 @runtime_checkable
 class TStructure(Protocol):
     st: gemmi.Structure
+    path: Path
     def clone(self) -> Self:
         ...
+
+@runtime_checkable
+class TRestraints(Protocol):
+    path: Path
+
+
 
 class TAtom(Protocol):
     ...
@@ -152,3 +162,28 @@ class AtomID(TAtomID):
 
     def __repr__(self):
         return f"({self.chain} : {self.insertion} : {self.name} : {self.altloc})"
+
+class Restraints(TRestraints):
+    def __init__(self, path: Path):
+        block = gemmi.cif.read(str(path))[-1]
+        chemcomp = gemmi.make_chemcomp_from_block(block)
+        self.name = chemcomp.name
+
+        G = networkx.Graph()
+        for atom in chemcomp.atoms:
+            if atom.el.atomic_number == 1:
+                continue
+            G.add_node(atom.id, Z=atom.el.atomic_number)
+
+        for bond in chemcomp.rt.bonds:
+            if (bond.id1.atom in G.nodes) & (bond.id2.atom in G.nodes):
+                G.add_edge(bond.id1.atom, bond.id2.atom)  # ignoring bond type
+        self.G = G
+        self.isomorphisms = []
+        matcher = iso.GraphMatcher(
+            G, G, node_match=iso.categorical_node_match('Z', 0))
+        for isomorphism in matcher.isomorphisms_iter():
+            self.isomorphisms.append(isomorphism)
+
+        ...
+    ...
