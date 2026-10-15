@@ -119,7 +119,7 @@ def run_phenix_rscc_script(script, out_dir):
 
 def _make_structure_mtz_file(st_path, tmp_dir):
     st = gemmi.read_structure(str(st_path))
-    out_path = tmp_dir / 'sf.mtz'
+    out_path = Path(tmp_dir) / 'sf.mtz'
     script = f"phenix.fmodel {st_path} high_resolution={st.resolution} file_name={out_path}"
     if shutil.which('phenix.fmodel'):
         p=subprocess.Popen(
