@@ -116,57 +116,45 @@ def run_phenix_rscc_script(script, out_dir):
     return rscc, rsccs
 
 def get_rscc(
-        st: TStructure | Path| None = None,
-        mtz: TReflections| Path| None= None,
-        xmap: TGrid| Path| None= None,
-        st_2: TStructure| Path| None= None,
-        mtz_2:TReflections| Path| None= None,
-        xmap_2: TGrid| Path | None= None
+        d1: TStructure | TReflections | TGrid | Path ,
+        d2: TStructure | TReflections | TGrid | Path 
 ):
-    st = _get_path(st)
-    mtz = _get_path(mtz)
-    xmap = _get_path(xmap)
-    st_2 = _get_path(st_2)
-    mtz_2 = _get_path(mtz_2)
-    xmap_2 = _get_path(xmap_2)
+
+    dtypes = []
+    for j, extension in enumerate([_get_path(d1).suffix, _get_path(d2).suffix]):
+        match extension:
+            case '.pdb' | '.cif' | '.mmcif':
+                dtypes.append(PHENX_MODEL)
+            case '.ccp4':
+                if PHENX_XMAP_1 in dtypes:
+                    dtypes.append(PHENX_XMAP_2)
+                else:
+                    dtypes.append(PHENX_XMAP_1)
+            case '.mtz':
+                if PHENX_MAP_COEFFS_1 in dtypes:
+                    dtypes.append(PHENX_MAP_COEFFS_2)
+                else:
+                    dtypes.append(PHENX_MAP_COEFFS_1)
+            case _:
+                if j == 0:
+                    raise Exception(f'{d1} is not a pdb, cif, mmcif, ccp4 or mtz file!')
+                else:
+                    raise Exception(f'{d2} is not a pdb, cif, mmcif, ccp4 or mtz file!')
+                                    
 
     with tempfile.TemporaryDirectory(delete=False) as fp:
-
-        match (st, mtz, xmap, st_2, mtz_2, xmap_2):
-            case (Path(), Path(), None, None, None, None):
+        match dtypes:
+            case [x, y] if (x == y == PHENX_MODEL):
+                ...
+            case _:
                 script = PHENIX_MAP_CORRELATIONS.format(
-                    dtype1=PHENX_MODEL,
-                    path1=st,
-                    dtype2=PHENX_MAP_COEFFS_1,
-                    path2=mtz,
-                    out_dir=fp
-                )
-                rscc, rsccs = run_phenix_rscc_script(script, fp)
-            case (Path(), None, Path(), None, None, None):
-                script = PHENIX_MAP_CORRELATIONS.format(
-                                    dtype1=PHENX_MODEL,
-                                    path1=st,
-                                    dtype2=PHENX_XMAP_1,
-                                    path2=xmap,
+                                    dtype1=dtypes[0],
+                                    path1=_get_path(d1),
+                                    dtype2=dtypes[1],
+                                    path2=_get_path(d1),
                                     out_dir=fp
                                 )
                 rscc, rsccs = run_phenix_rscc_script(script, fp)
-            case (Path(), None, None, Path(), None, None,):
-                ...
-            case (None, Path(), None, None, Path(), None,):
-                        ...
-            case (None, Path(), None, None, None, Path(),):
-                ...
-            case (None, None, Path(), None, None, Path(),):
-                script = PHENIX_MAP_CORRELATIONS.format(
-                    dtype1=PHENX_XMAP_1,
-                    path1=xmap,
-                    dtype2=PHENX_XMAP_2,
-                    path2=xmap_2,
-                    out_dir=fp
-                )
-                rscc, rsccs = run_phenix_rscc_script(script, fp)
-            case (_, _, _, _, _, _):
-                raise Exception(f'Wrong input types!')
+
 
     return rscc, rsccs
